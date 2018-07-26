@@ -28,9 +28,9 @@ apply:
 server: 
 ifneq ($(HAS_SERVER),)
 	mkdir -p server/dist;
-	cd server && env GOOS=linux GOARCH=amd64 $(GO) build -o dist/plugin-linux-amd64;
-	cd server && env GOOS=darwin GOARCH=amd64 $(GO) build -o dist/plugin-darwin-amd64;
-	cd server && env GOOS=windows GOARCH=amd64 $(GO) build -o dist/plugin-windows-amd64.exe;
+	cd server && env GOOS=linux GOARCH=amd64 go build -o dist/plugin-linux-amd64;
+	cd server && env GOOS=darwin GOARCH=amd64 go build -o dist/plugin-darwin-amd64;
+	cd server && env GOOS=windows GOARCH=amd64 go build -o dist/plugin-windows-amd64.exe;
 endif
 
 # webapp/.npminstall ensures NPM dependencies are installed without having to run this all the time
@@ -76,7 +76,7 @@ dist: apply \
 # deploy installs the plugin to a (development) server, using the API if appropriate environment
 # variables are defined, or copying the files directly to a sibling mattermost-server directory
 .PHONY: deploy
-deploy:
+deploy: dist
 ifneq ($(and $(MM_SERVICESETTINGS_SITEURL),$(MM_ADMIN_USERNAME),$(MM_ADMIN_PASSWORD)),)
 	@echo "Installing plugin via API"
 	http --print b --check-status $(MM_SERVICESETTINGS_SITEURL)/api/v4/users/me || ( \
