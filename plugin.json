@@ -1,7 +1,7 @@
 {
     "id": "antivirus",
     "name": "Antivirus",
-    "description": "Antivirus plugin supporting the clamav docker container.",
+    "description": "Antivirus plugin for scanning uploaded files.",
     "version": "0.1.0",
     "server": {
         "executables": {
