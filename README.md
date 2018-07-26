@@ -1,47 +1,21 @@
-# Sample Plugin
+# Mattermost Antivirus Plugin
 
-This plugin serves as a starting point for writing a Mattermost plugin. Feel free to base your own plugin off this repository.
+This plugin allows the forwarding of uploaded files to an antivirus application. Currently the plugin supports clamav.
 
-## Getting Started
-Shallow clone the repository to a directory matching your plugin name:
-```
-git clone --depth 1 https://github.com/mattermost/mattermost-plugin-sample com.example.my-plugin
-```
+Requires Mattermost 5.2 or above.
 
-Edit `plugin.json` with your `id`, `name`, and `description`:
-```
-{
-    "id": "com.example.my-plugin",
-    "name": "My Plugin",
-    "description": "A plugin to enhance Mattermost."
-}
-```
+## Installation
 
-Build your plugin:
-```
-make
-```
+Go to the [releases page of this Github repository](https://github.com/mattermost/mattermost-plugin-antivirus/releases) and download the latest release. You can upload this file in the Mattermost system console under **System Console > Plugins > Management** to install the plugin. For more details on uploading and installing plugins, [see the full documentation.](https://docs.mattermost.com/administration/plugins.html#plugin-uploads).
 
-This will produce a single plugin file (with support for multiple architectures) for upload to your Mattermost server:
+You will need a clamd installation to do the actual scanning. An easy way to get one is with docker:
 
 ```
-dist/com.example.my-plugin.tar.gz
+docker run -d -p 3310:3310 mkodockx/docker-clamav
 ```
 
-There is a build target to automate deploying and enabling the plugin to your server, but it requires configuration and [http](https://httpie.org/) to be installed:
-```
-export MM_SERVICESETTINGS_SITEURL=http://localhost:8065/
-export MM_ADMIN_USERNAME=admin
-export MM_ADMIN_PASSWORD=password
-make deploy
-```
+Once you have clamd running you will need to configure the plugin to make requests to your clamd instance.  Go to **System Console > Plugins > Antivirus** and configure "Clamav Host and Port" to point at your clamd instance.
 
-Alternatively, if you are running your `mattermost-server` out of a sibling directory by the same name, use the `deploy` target alone to  unpack the files into the right directory. You will need to restart your server and manually enable your plugin.
+You can then activate the plugin **System Console > Plugins > Management** and all your uploads will be scanned.
 
-In production, deploy and upload your plugin via the [System Console](https://about.mattermost.com/default-plugin-uploads).
-
-## Q&A
-
-### How do I make a server-only or web app-only plugin?
-
-Simply delete the `server` or `webapp` folders and remove the corresponding sections from `plugin.json`. The build scripts will skip the missing portions automatically.
+You can test that you have set everything up correctly by making an [EICAR test file](https://www.eicar.org/86-0-Intended-use.html) and uploading it. It should be rejected.
