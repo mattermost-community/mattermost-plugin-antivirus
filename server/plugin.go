@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"sync"
 	"time"
 
 	"github.com/dutchcoders/go-clamd"
@@ -11,12 +12,16 @@ import (
 
 type Plugin struct {
 	plugin.MattermostPlugin
-	ClamavHostPort     string
-	ScanTimeoutSeconds int
+
+	configurationLock sync.RWMutex
+
+	configuration *configuration
 }
 
 func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
-	av := clamd.NewClamd("tcp://" + p.ClamavHostPort)
+	config := p.getConfiguration()
+
+	av := clamd.NewClamd("tcp://" + config.ClamavHostPort)
 	abortScan := make(chan bool)
 	response, err := av.ScanStream(file, abortScan)
 	if err != nil {
@@ -34,7 +39,7 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 				return nil, "Virus found in file."
 			}
 			continue
-		case <-time.After(time.Duration(p.ScanTimeoutSeconds) * time.Second):
+		case <-time.After(time.Duration(config.ScanTimeoutSeconds) * time.Second):
 			close(abortScan)
 			p.API.LogError("Scan timed out.", "filename", info.Name)
 			return nil, "Problem with antivirus scanner."
