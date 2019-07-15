@@ -47,5 +47,5 @@ workflows:
           context: matterbuild-github-token
           requires:
             - plugin-ci/lint
-            - plugin-ci/coverage
+            - plugin-ci/test
             - plugin-ci/build
