@@ -21,4 +21,4 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
 
 You're all set! All file uploads on the system are now scanned for viruses by ClamAV.
 
-To test your configuration is correct, create an [EICAR test file](https://www.eicar.org/86-0-Intended-use.html) and upload it. The file should be rejected.
+To test your configuration is correct, create an [EICAR test file](https://2016.eicar.org/86-0-Intended-use.html) and upload it. The file should be rejected.
