@@ -22,9 +22,16 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
 4. Once clamd server is running, configure the plugin to make requests to your clamd instance. Go to **System Console > Plugins > Antivirus** and configure **Clamav Host and Port** to point at your clamd instance.  
 5. Activate the plugin at **System Console > Plugins > Management** and ensure that it starts with no errors
 
-You're all set! All file uploads on the system are now scanned for viruses by ClamAV.
 
-To test your configuration is correct, create an [EICAR test file](https://2016.eicar.org/86-0-Intended-use.html) and upload it. The file should be rejected.
+## Testing
+
+To test your configuration is correct, create an [EICAR test file](https://2016.eicar.org/86-0-Intended-use.html) (copy the text from that webpage into a text file editor and save it) and upload it. The file should be rejected as below:
 
 ![Screenshot of Anti-virus in action](/2019-07-26_13-56-13.png)
+
+If there is an error with your setup - check your ClamAV server setup and communication:
+
+![Screenshot of Anti-virus plugin showing a server error](/2019-07-26_13-56-13.png)
+
+
 
