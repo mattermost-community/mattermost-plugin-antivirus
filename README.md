@@ -29,9 +29,12 @@ To test your configuration is correct, create an [EICAR test file](https://2016.
 
 ![Screenshot of Anti-virus in action](/2019-07-26_13-56-13.png)
 
+Upload a regular file to ensure they are processed OK and posted to the channel.
+
 If there is an error with your setup - check your ClamAV server setup and communication:
 
 ![Screenshot of Anti-virus plugin showing a server error](/2019-07-26_11-52-33.png)
+
 
 
 
