@@ -2,7 +2,7 @@
 
 This plugin allows the forwarding of uploaded files to an antivirus scanning application and prevents the upload from completing if there is a virus detected in the file. Use it to prevent users from inadvertently spreading malware or viruses via your Mattermost instance. 
 
-Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.net/) across browser, Desktop Apps and the Mobile Apps. ClamAV is an open source (GPL) anti-virus engine used in a variety of situations including email scanning, web scanning, and end point security. It provides a number of utilities including a flexible and scalable multi-threaded daemon, a command line scanner and an advanced tool for automatic database updates. A ClamAV server can be easily provisioned as a docker container that runs alongside Mattermost. 
+Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.net/) across browser, Desktop Apps and the Mobile Apps. ClamAV is an open source (GPL) anti-virus engine used in a variety of situations including email scanning, web scanning, and end point security. It provides a number of utilities including a flexible and scalable multi-threaded daemon and an advanced tool for automatic database updates. A ClamAV server can be easily provisioned as a docker container that runs alongside Mattermost. 
 
 **Requirements:**
 
