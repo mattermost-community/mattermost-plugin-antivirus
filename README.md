@@ -26,5 +26,5 @@ You're all set! All file uploads on the system are now scanned for viruses by Cl
 
 To test your configuration is correct, create an [EICAR test file](https://2016.eicar.org/86-0-Intended-use.html) and upload it. The file should be rejected.
 
-![Screenshot of Anti-virus in action](../2019-07-26_11-52-33.png)
+![Screenshot of Anti-virus in action](/2019-07-26_11-52-33.png)
 
