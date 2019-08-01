@@ -20,7 +20,7 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
    ```
 
 4. Once clamd server is running, configure the plugin to make requests to your clamd instance. Go to **System Console > Plugins > Antivirus** and configure **Clamav Host and Port** to point at your clamd instance.  
-5. Activate the plugin at **System Console > Plugins > Management** and ensure that it starts with no errors
+5. Activate the plugin at **System Console > Plugins > Management** and ensure it starts with no errors.
 
 
 ## Testing
