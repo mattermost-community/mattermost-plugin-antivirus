@@ -2,7 +2,7 @@
     "id": "antivirus",
     "name": "Antivirus",
     "description": "Antivirus plugin for scanning uploaded files.",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "server": {
         "executables": {
             "linux-amd64": "server/dist/plugin-linux-amd64",
