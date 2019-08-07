@@ -35,8 +35,8 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 				return info, ""
 			}
 			if scanResult.Status != clamd.RES_OK {
-				p.API.LogWarn("Virus found in file.", "filename", info.Name, "user", info.CreatorId, "scan_result", scanResult.Raw)
-				return nil, "Virus found in file."
+				p.API.LogWarn("The antivirus service would not allow you to attach this file.", "filename", info.Name, "user", info.CreatorId, "scan_result", scanResult.Raw)
+				return nil, "The antivirus service did not allow you to attach this file."
 			}
 			continue
 		case <-time.After(time.Duration(config.ScanTimeoutSeconds) * time.Second):
