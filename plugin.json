@@ -11,11 +11,11 @@
         }
     },
     "settings_schema": {
-        "header": "",
+        "header": "Antivirus plugin for scanning uploaded files to Mattermost, uses ClamAV to scan files. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus)",
         "footer": "",
         "settings": [{
             "key": "ClamavHostPort",
-            "display_name": "Clamav Host and Port",
+            "display_name": "ClamAV - Host and Port",
             "type": "text",
             "help_text": "The hostname and port to connect to clamd",
             "placeholder": "localhost:3310",
