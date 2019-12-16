@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v5/plugin"
+
 	"github.com/dutchcoders/go-clamd"
-	"github.com/mattermost/mattermost-server/model"
-	"github.com/mattermost/mattermost-server/plugin"
 )
 
 type Plugin struct {
