@@ -22,17 +22,11 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 	config := p.getConfiguration()
 
 	av := clamd.NewClamd("tcp://" + config.ClamavHostPort)
-	err := av.Ping()
-	if err != nil {
-		p.API.LogError("Unable to ping ClamAV server. " + err.Error())
-		return nil, "File Scanning Server unreachable, contact your Mattermost administrator for assistance."
-	}
-
 	abortScan := make(chan bool)
 	response, err := av.ScanStream(file, abortScan)
 	if err != nil {
 		p.API.LogError("Error while scanning for viruses. " + err.Error())
-		return nil, "Error while scanning for viruses."
+		return nil, "File Scanning Server unreachable, contact your Mattermost administrator for assistance."
 	}
 	for {
 		select {
