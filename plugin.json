@@ -2,7 +2,10 @@
     "id": "antivirus",
     "name": "Antivirus",
     "description": "Antivirus plugin for scanning uploaded files.",
+    "homepage_url": "https://github.com/mattermost/mattermost-plugin-antivirus",
+    "support_url": "https://github.com/mattermost/mattermost-plugin-antivirus/issues",
     "version": "0.1.2",
+    "min_server_version": "5.2.0",
     "server": {
         "executables": {
             "linux-amd64": "server/dist/plugin-linux-amd64",
