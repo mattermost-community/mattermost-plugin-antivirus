@@ -1,4 +1,9 @@
-# Mattermost Antivirus Plugin ![CircleCI branch](https://img.shields.io/circleci/project/github/mattermost/mattermost-plugin-antivirus/master.svg)
+# Mattermost Antivirus Plugin
+
+![CircleCI branch](https://img.shields.io/circleci/project/github/mattermost/mattermost-plugin-antivirus/master.svg)
+
+**Maintainer:** [@iomodo](https://github.com/iomodo)
+**Co-Maintainer:** [@hanzei](https://github.com/hanzei)
 
 This plugin allows the forwarding of uploaded files to an antivirus scanning application and prevents the upload from completing if there is a virus detected in the file. Use it to prevent users from inadvertently spreading malware or viruses via your Mattermost instance. 
 
