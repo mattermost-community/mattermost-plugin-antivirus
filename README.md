@@ -18,10 +18,10 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
 
 1. Go to the [releases page of this Github repository](https://github.com/mattermost/mattermost-plugin-antivirus/releases) and download the latest release for your Mattermost server.
 2. In the Mattermost System Console under **System Console > Plugins > Plugin Management** upload the file to install the plugin. To learn more about how to upload a plugin, [see the documentation](https://docs.mattermost.com/administration/plugins.html#plugin-uploads).
-3. Install ClamAV (clamd) for virus scanning. One easy option is to provision a ClamAV container with Docker by running the following command.  Assuming you have already installed Docker, this will download and install the latest version of ClamAV and set up a server with an open port at 3310:
+3. Install ClamAV (clamd) for virus scanning. One easy option is to provision a ClamAV container with Docker by running the following command.  Assuming you have already installed Docker, this will download and install the latest version of ClamAV and set up a server with an open port at 3310: and MaxFileSize of 50 MB (Mattermost Default)
 
    ```
-   docker run -d -p 3310:3310 mkodockx/docker-clamav
+   docker run -e CLAMD_CONF_MaxFileSize=50M -d -p 3310:3310 mkodockx/docker-clamav
    ```
 
 4. Once clamd server is running, configure the plugin to make requests to your clamd instance. Go to **System Console > Plugins > Antivirus** and configure **Clamav Host and Port** to point at your clamd instance.  
