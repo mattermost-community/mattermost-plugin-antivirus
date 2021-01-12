@@ -15,18 +15,17 @@
         }
     },
     "settings_schema": {
-        "header": "Antivirus plugin for scanning uploaded files to Mattermost, uses ClamAV to scan files. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus)",
-        "footer": "",
+        "header": "Antivirus plugin for scanning uploaded files to Mattermost, uses ClamAV to scan files. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus).
         "settings": [{
             "key": "ClamavHostPort",
-            "display_name": "ClamAV - Host and Port",
+            "display_name": "ClamAV - Host and Port:",
             "type": "text",
-            "help_text": "The hostname and port to connect to clamd",
+            "help_text": "The hostname and port to connect to clamd.",
             "placeholder": "localhost:3310",
             "default": "localhost:3310"
         }, {
             "key": "ScanTimeoutSeconds",
-            "display_name": "Scan Timeout (seconds)",
+            "display_name": "Scan Timeout (seconds):",
             "type": "number",
             "help_text": "How long the virus scan can take before giving up.",
             "placeholder": "10",
