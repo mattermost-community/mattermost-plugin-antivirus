@@ -18,6 +18,8 @@ import (
 type configuration struct {
 	ClamavHostPort     string
 	ScanTimeoutSeconds int
+	ConnectionType     string
+	ClamavSocketPath   string
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
