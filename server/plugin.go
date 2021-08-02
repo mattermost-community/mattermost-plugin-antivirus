@@ -22,7 +22,12 @@ type Plugin struct {
 func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
 	config := p.getConfiguration()
 
-	av := clamd.NewClamd("tcp://" + config.ClamavHostPort)
+	var av *clamd.Clamd
+	if config.ConnectionType == "tcp" {
+		av = clamd.NewClamd("tcp://" + config.ClamavHostPort)
+	} else {
+		av = clamd.NewClamd(config.ClamavSocketPath)
+	}
 	abortScan := make(chan bool)
 	response, err := av.ScanStream(file, abortScan)
 	if err != nil {

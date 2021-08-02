@@ -17,12 +17,35 @@
     "settings_schema": {
         "header": "Antivirus plugin which uses ClamAV to scan files uploaded to Mattermost. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus).",
         "settings": [{
+            "key": "ConnectionType",
+            "display_name": "Connection Type (Unix/Tcp):",
+            "type": "dropdown",
+            "help_text": "Connection Type.",
+            "default": "tcp",
+            "options": [
+                {
+                    "display_name": "Tcp",
+                    "value": "tcp"
+                },
+                {
+                    "display_name": "Unix",
+                    "value": "unix"
+                }
+            ]
+        },{
             "key": "ClamavHostPort",
             "display_name": "ClamAV - Host and Port:",
             "type": "text",
-            "help_text": "The hostname and port to connect to clamd.",
+            "help_text": "The hostname and port to connect to clamd. (required ConnectionType : Tcp)",
             "placeholder": "localhost:3310",
             "default": "localhost:3310"
+        },{
+            "key": "ClamavSocketPath",
+            "display_name": "Socket Path:",
+            "type": "text",
+            "help_text": "Path to socket. (required if connectionType : Unix)",
+            "placeholder": "/tmp/clamd.socket",
+            "default": "/tmp/clamd.socket"
         }, {
             "key": "ScanTimeoutSeconds",
             "display_name": "Scan Timeout (seconds):",
@@ -30,6 +53,7 @@
             "help_text": "How long the virus scan can take before giving up.",
             "placeholder": "10",
             "default": 10
-        }]
+        }
+    ]
     }
 }
