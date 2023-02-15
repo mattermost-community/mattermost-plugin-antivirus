@@ -8,5 +8,5 @@ var manifest = struct {
 	Version string
 }{
 	ID:      "antivirus",
-	Version: "0.1.2",
+	Version: "1.0.0",
 }
