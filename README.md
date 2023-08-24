@@ -26,9 +26,8 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
    docker run -e CLAMD_CONF_MaxFileSize=50M -d -p 3310:3310 mkodockx/docker-clamav
    ```
 
-4. Once clamd server is running, configure the plugin to make requests to your clamd instance. Go to **System Console > Plugins > Antivirus** and configure **Clamav Host and Port** to point at your clamd instance.  
+4. Once clamd server is running, configure the plugin in Mattermost to make requests to your clamd instance by going to **System Console > Plugins > Antivirus**. Configure **Clamav Host and Port** to point at your clamd instance, and configure a **Scan timeour in seconds** to set how long it takes before the virus scan times out.  
 5. Activate the plugin at **System Console > Plugins > Management** and ensure it starts with no errors.
-
 
 ## Testing
 
