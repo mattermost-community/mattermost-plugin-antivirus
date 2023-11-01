@@ -1,3 +1,7 @@
+# :warning: Disclaimer
+
+**This repository is community supported and not maintained by Mattermost. Mattermost disclaims any and all liability for integrations, including Third Party Integrations and Mattermost Integrations. All integrations are provided "AS IS", and may be used at your own risk. Integrations may be modified or discontinued at any time.**
+
 # Mattermost Antivirus Plugin
 
 ![CircleCI branch](https://img.shields.io/circleci/project/github/mattermost/mattermost-plugin-antivirus/master.svg)
