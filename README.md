@@ -57,7 +57,7 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
 
 ## Testing
 
-To test your configuration is correct, create an [EICAR test file](https://2016.eicar.org/86-0-Intended-use.html) (copy the text from that webpage into a text file editor and save it) and upload it. The file should be rejected as below:
+To test your configuration is correct, download an [EICAR test file](https://www.eicar.org/download-anti-malware-testfile/)and upload it. The file should be rejected as below:
 
 ![Screenshot of Anti-virus in action](/2019-07-26_13-56-13.png)
 
