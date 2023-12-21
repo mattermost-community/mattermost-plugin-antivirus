@@ -30,11 +30,11 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
 
    If your Mattermost's MaxFileSize is ≤ 100MB
       ```
-      docker run -d -p 3310:3310 clamav/clamav:latest --restart unless-stopped
+      docker run -d --restart unless-stopped -p 3310:3310 clamav/clamav:latest 
       ```
    If it is > 100MB
       ```
-      docker run -d --mount type=bind,source=/full/path/to/clamav/,target=/etc/clamav -p 3310:3310 clamav/clamav:latest --restart unless-stopped
+      docker run -d --restart unless-stopped --mount type=bind,source=/full/path/to/clamav/,target=/etc/clamav -p 3310:3310 clamav/clamav:latest 
       ```
    `/full/path/to/clamav/clamd.conf`
    ```conf
