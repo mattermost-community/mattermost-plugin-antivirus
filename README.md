@@ -32,12 +32,13 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
       ```
       docker run -d -p 3310:3310 clamav/clamav:latest --restart unless-stopped
       ```
-   If it is above
-   ```
-   docker run -d --mount type=bind,source=/full/path/to/clamav/,target=/etc/clamav -p 3310:3310 clamav/clamav:latest --restart unless-stopped
-   ```
-   `clamd.conf`
+   If it is > 100MB
+      ```
+      docker run -d --mount type=bind,source=/full/path/to/clamav/,target=/etc/clamav -p 3310:3310 clamav/clamav:latest --restart unless-stopped
+      ```
+   `/full/path/to/clamav/clamd.conf`
    ```conf
+   ...
    # Files larger than this limit won't be scanned. Affects the input file itself
    # as well as files contained inside it (when the input file is an archive, a
    # document or some other kind of container).
@@ -48,6 +49,7 @@ Currently the plugin supports [ClamAV anti-virus software](https://www.clamav.ne
    # 2 GB at this time.
    # Default: 100M
    MaxFileSize 200M # Match your filezize limit in Mattermost
+   ...
    ```
 
 4. Once clamd server is running, configure the plugin in Mattermost to make requests to your clamd instance by going to **System Console > Plugins > Antivirus**. Configure **Clamav Host and Port** to point at your clamd instance, and optionally configure a **Scan timeout in seconds** to set how long it takes before the virus scan times out.  
