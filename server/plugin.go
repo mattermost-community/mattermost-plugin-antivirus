@@ -29,6 +29,13 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		av = clamd.NewClamd(config.ClamavSocketPath)
 	}
 	abortScan := make(chan bool)
+
+	if err := p.API.SendToastMessage(info.CreatorId, "Scanning file...", model.SendToastMessageOptions{
+		Position: "bottom-center",
+	}); err != nil {
+		p.API.LogError("Error while sending toast message. " + err.Error())
+	}
+
 	response, err := av.ScanStream(file, abortScan)
 	if err != nil {
 		p.API.LogError("Error while scanning for viruses. " + err.Error())
