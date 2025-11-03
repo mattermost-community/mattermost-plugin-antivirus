@@ -183,4 +183,3 @@ func checkJSONLogsSetting(ctx context.Context, client *model.Client4) error {
 
 	return nil
 }
-

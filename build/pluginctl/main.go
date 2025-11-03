@@ -182,4 +182,3 @@ func resetPlugin(ctx context.Context, client *model.Client4, pluginID string) er
 
 	return nil
 }
-

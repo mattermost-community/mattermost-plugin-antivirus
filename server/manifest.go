@@ -20,7 +20,7 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/mattermost-plugin-antivirus/issues",
   "release_notes_url": "https://github.com/mattermost/mattermost-plugin-antivirusreleases/tag/v1.0.0",
   "version": "1.0.0",
-  "min_server_version": "6.2.1",
+  "min_server_version": "5.37.0",
   "server": {
     "executables": {
       "darwin-amd64": "server/dist/plugin-darwin-amd64",

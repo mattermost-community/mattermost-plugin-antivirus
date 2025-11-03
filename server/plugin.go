@@ -19,7 +19,7 @@ type Plugin struct {
 	configuration *configuration
 }
 
-func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
+func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, file io.Reader, _ io.Writer) (*model.FileInfo, string) {
 	config := p.getConfiguration()
 
 	var av *clamd.Clamd

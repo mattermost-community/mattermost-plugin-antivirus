@@ -200,4 +200,3 @@ func compareSlice[S ~[]E, E comparable](t *testing.T, expected, got S) {
 		}
 	}
 }
-
