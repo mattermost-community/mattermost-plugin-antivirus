@@ -19,7 +19,7 @@ type Plugin struct {
 	configuration *configuration
 }
 
-func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, file io.Reader, _ io.Writer) (*model.FileInfo, string) {
+func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, _ io.Writer) (*model.FileInfo, string) {
 	config := p.getConfiguration()
 
 	var av *clamd.Clamd
@@ -30,7 +30,7 @@ func (p *Plugin) FileWillBeUploaded(_ *plugin.Context, info *model.FileInfo, fil
 	}
 	abortScan := make(chan bool)
 
-	if err := p.API.SendToastMessage(info.CreatorId, "Scanning file...", model.SendToastMessageOptions{
+	if err := p.API.SendToastMessage(info.CreatorId, c.SessionId, "Scanning file...", model.SendToastMessageOptions{
 		Position: "bottom-center",
 	}); err != nil {
 		p.API.LogError("Error while sending toast message. " + err.Error())

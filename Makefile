@@ -164,8 +164,8 @@ apply:
 ## Install go tools
 install-go-tools:
 	@echo Installing go tools
-	$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
-	$(GO) install gotest.tools/gotestsum@v1.7.0
+	$(GO) install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.8.0
+	$(GO) install gotest.tools/gotestsum@v1.13.0
 
 ## Runs eslint and golangci-lint
 .PHONY: check-style
@@ -255,6 +255,11 @@ endif
 ## Builds and bundles the plugin.
 .PHONY: dist
 dist: apply server webapp bundle
+ifeq ($(PLUGIN_ID),com.mattermost.plugin-starter-template)
+	$(warning WARNING)
+	$(warning You are building with the default plugin ID "com.mattermost.plugin-starter-template".)
+	$(warning Consider editing plugin.json to configure your project with a unique plugin ID.)
+endif
 
 ## Builds and installs the plugin to a server.
 .PHONY: deploy
@@ -314,6 +319,14 @@ detach: setup-attach
 		echo "Located existing delve process running with PID: $$DELVE_PID. Killing." ; \
 		kill -9 $$DELVE_PID ; \
 	fi
+
+## Generates mock golang interfaces for testing.
+.PHONY: mock
+mock:
+ifneq ($(HAS_SERVER),)
+	$(GO) install go.uber.org/mock/mockgen@v0.6.0
+	mockgen -destination=server/mocks/mock_plugin.go -package=mocks github.com/mattermost/mattermost-plugin-antivirus/server Plugin
+endif
 
 ## Runs any lints and unit tests defined for the server and webapp, if they exist.
 .PHONY: test
