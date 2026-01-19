@@ -15,11 +15,11 @@ const manifestStr = `
 {
   "id": "antivirus",
   "name": "Antivirus",
-  "description": "Antivirus plugin for scanning uploaded files.",
+  "description": "Antivirus plugin supporting multiple scanning backends for uploaded files.",
   "homepage_url": "https://github.com/mattermost/mattermost-plugin-antivirus",
   "support_url": "https://github.com/mattermost/mattermost-plugin-antivirus/issues",
   "release_notes_url": "https://github.com/mattermost/mattermost-plugin-antivirusreleases/tag/v1.0.0",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "min_server_version": "5.37.0",
   "server": {
     "executables": {
@@ -32,46 +32,22 @@ const manifestStr = `
     "executable": ""
   },
   "settings_schema": {
-    "header": "Antivirus plugin which uses ClamAV to scan files uploaded to Mattermost. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus).",
+    "header": "Antivirus plugin supporting multiple scanning backends (ClamAV, and more). See [documentation](https://github.com/mattermost/mattermost-plugin-antivirus).",
     "footer": "",
     "settings": [
       {
-        "key": "ConnectionType",
-        "display_name": "Connection Type (Unix/Tcp):",
+        "key": "BackendType",
+        "display_name": "Antivirus Backend:",
         "type": "dropdown",
-        "help_text": "Connection Type.",
+        "help_text": "Select the antivirus scanning backend to use.",
         "placeholder": "",
-        "default": "tcp",
+        "default": "clamav",
         "options": [
           {
-            "display_name": "Tcp",
-            "value": "tcp"
-          },
-          {
-            "display_name": "Unix",
-            "value": "unix"
+            "display_name": "ClamAV",
+            "value": "clamav"
           }
         ],
-        "hosting": "",
-        "secret": false
-      },
-      {
-        "key": "ClamavHostPort",
-        "display_name": "ClamAV - Host and Port:",
-        "type": "text",
-        "help_text": "The hostname and port to connect to clamd. (required ConnectionType : Tcp)",
-        "placeholder": "localhost:3310",
-        "default": "localhost:3310",
-        "hosting": "",
-        "secret": false
-      },
-      {
-        "key": "ClamavSocketPath",
-        "display_name": "Socket Path:",
-        "type": "text",
-        "help_text": "Path to socket. (required if connectionType : Unix)",
-        "placeholder": "/tmp/clamd.socket",
-        "default": "/tmp/clamd.socket",
         "hosting": "",
         "secret": false
       },
@@ -79,9 +55,49 @@ const manifestStr = `
         "key": "ScanTimeoutSeconds",
         "display_name": "Scan Timeout (seconds):",
         "type": "number",
-        "help_text": "How long the virus scan can take before giving up.",
+        "help_text": "Maximum time allowed for virus scanning before timeout (applies to all backends).",
         "placeholder": "10",
         "default": 10,
+        "hosting": "",
+        "secret": false
+      },
+      {
+        "key": "ClamAV.ConnectionType",
+        "display_name": "ClamAV - Connection Type:",
+        "type": "dropdown",
+        "help_text": "How to connect to ClamAV daemon (TCP or Unix socket). Only applies when ClamAV backend is selected.",
+        "placeholder": "",
+        "default": "tcp",
+        "options": [
+          {
+            "display_name": "TCP",
+            "value": "tcp"
+          },
+          {
+            "display_name": "Unix Socket",
+            "value": "unix"
+          }
+        ],
+        "hosting": "",
+        "secret": false
+      },
+      {
+        "key": "ClamAV.HostPort",
+        "display_name": "ClamAV - Host and Port:",
+        "type": "text",
+        "help_text": "Hostname and port for TCP connection (e.g., localhost:3310). Only applies when ClamAV backend is selected with TCP connection type.",
+        "placeholder": "localhost:3310",
+        "default": "localhost:3310",
+        "hosting": "",
+        "secret": false
+      },
+      {
+        "key": "ClamAV.SocketPath",
+        "display_name": "ClamAV - Socket Path:",
+        "type": "text",
+        "help_text": "Unix socket path (e.g., /tmp/clamd.socket). Only applies when ClamAV backend is selected with Unix connection type.",
+        "placeholder": "/tmp/clamd.socket",
+        "default": "/tmp/clamd.socket",
         "hosting": "",
         "secret": false
       }

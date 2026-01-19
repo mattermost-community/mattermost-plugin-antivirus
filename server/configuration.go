@@ -1,9 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/pkg/errors"
+
+	"github.com/mattermost/mattermost-plugin-antivirus/server/scanner"
+	"github.com/mattermost/mattermost-plugin-antivirus/server/scanner/clamav"
 )
 
 // configuration captures the plugin's external configuration as exposed in the Mattermost server
@@ -18,17 +22,65 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
-	ClamavHostPort     string
-	ScanTimeoutSeconds int
-	ConnectionType     string
-	ClamavSocketPath   string
+	// Backend selection
+	BackendType string `json:"BackendType"`
+
+	// Common settings
+	ScanTimeoutSeconds int `json:"ScanTimeoutSeconds"`
+
+	// ClamAV-specific settings
+	ClamAV *clamav.Config `json:"ClamAV,omitempty"`
+
+	// Legacy fields for backward compatibility (v1.x)
+	// These are automatically migrated to nested config
+	ClamavHostPort   string `json:"ClamavHostPort,omitempty"`
+	ConnectionType   string `json:"ConnectionType,omitempty"`
+	ClamavSocketPath string `json:"ClamavSocketPath,omitempty"`
 }
 
-// Clone shallow copies the configuration. Your implementation may require a deep copy if
-// your configuration has reference types.
+// Clone deep copies the configuration including nested configs
 func (c *configuration) Clone() *configuration {
 	clone := *c
+
+	// Deep copy nested configs
+	if c.ClamAV != nil {
+		clamavCopy := *c.ClamAV
+		clone.ClamAV = &clamavCopy
+	}
+
 	return &clone
+}
+
+// Validate checks if the configuration is valid
+func (c *configuration) Validate() error {
+	if c.BackendType == "" {
+		return fmt.Errorf("BackendType must be specified")
+	}
+
+	if c.ScanTimeoutSeconds <= 0 {
+		return fmt.Errorf("ScanTimeoutSeconds must be positive")
+	}
+
+	// Validate backend-specific config
+	switch c.BackendType {
+	case "clamav":
+		if c.ClamAV == nil {
+			return fmt.Errorf("ClamAV configuration is required for clamav backend")
+		}
+		return c.ClamAV.Validate()
+	default:
+		return fmt.Errorf("unsupported backend type: %s", c.BackendType)
+	}
+}
+
+// GetScannerConfig returns the scanner-specific configuration
+func (c *configuration) GetScannerConfig() (scanner.Config, error) {
+	switch c.BackendType {
+	case "clamav":
+		return c.ClamAV, nil
+	default:
+		return nil, fmt.Errorf("unknown backend type: %s", c.BackendType)
+	}
 }
 
 // getConfiguration retrieves the active configuration under lock, making it safe to use
@@ -81,7 +133,26 @@ func (p *Plugin) OnConfigurationChange() error {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
 
+	// Migrate configuration if needed (v1.x to v2.x)
+	configuration, migrated := p.migrateConfiguration(configuration)
+	if migrated {
+		p.API.LogWarn("Configuration migrated from v1.x format. Please re-save plugin settings in System Console to persist the migration.")
+	}
+
+	// Validate configuration
+	if err := configuration.Validate(); err != nil {
+		return errors.Wrap(err, "invalid plugin configuration")
+	}
+
 	p.setConfiguration(configuration)
+
+	// Reinitialize scanner with new config (if plugin is activated)
+	if p.scanner != nil {
+		if err := p.initializeScanner(); err != nil {
+			p.API.LogError("Failed to reinitialize scanner after configuration change", "error", err.Error())
+			// Don't fail the config change, but log the error
+		}
+	}
 
 	return nil
 }
