@@ -18,7 +18,7 @@ const manifestStr = `
   "description": "Antivirus plugin for scanning uploaded files.",
   "homepage_url": "https://github.com/mattermost/mattermost-plugin-antivirus",
   "support_url": "https://github.com/mattermost/mattermost-plugin-antivirus/issues",
-  "release_notes_url": "https://github.com/mattermost/mattermost-plugin-antivirusreleases/tag/v1.0.0",
+  "release_notes_url": "https://github.com/mattermost/mattermost-plugin-antivirus/releases/tag/v1.0.0",
   "version": "1.0.0",
   "min_server_version": "5.37.0",
   "server": {
