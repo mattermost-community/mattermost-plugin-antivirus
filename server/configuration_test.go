@@ -9,7 +9,7 @@ import (
 
 func TestConfiguration_FromMap(t *testing.T) {
 	t.Run("populates all fields from map", func(t *testing.T) {
-		m := map[string]interface{}{
+		m := map[string]any{
 			"ClamavHostPort":       "localhost:3310",
 			"ScanTimeoutSeconds":   float64(30),
 			"ConnectionType":       "tcp",
@@ -31,7 +31,7 @@ func TestConfiguration_FromMap(t *testing.T) {
 	})
 
 	t.Run("handles empty map", func(t *testing.T) {
-		m := map[string]interface{}{}
+		m := map[string]any{}
 
 		var cfg configuration
 		err := cfg.FromMap(m)
