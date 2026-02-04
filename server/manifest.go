@@ -84,6 +84,26 @@ const manifestStr = `
         "default": 10,
         "hosting": "",
         "secret": false
+      },
+      {
+        "key": "ToastMessageScanning",
+        "display_name": "Scanning Toast Message:",
+        "type": "text",
+        "help_text": "Message shown to the user while a file is being scanned.",
+        "placeholder": "",
+        "default": "Scanning file...",
+        "hosting": "",
+        "secret": false
+      },
+      {
+        "key": "ToastMessageSuccess",
+        "display_name": "Success Toast Message:",
+        "type": "text",
+        "help_text": "Message shown to the user when a file scan completes with no threats found.",
+        "placeholder": "",
+        "default": "File scanned, no threats found",
+        "hosting": "",
+        "secret": false
       }
     ],
     "sections": null

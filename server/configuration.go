@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"reflect"
+	"strings"
 
+	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/pkg/errors"
 )
 
@@ -22,6 +25,53 @@ type configuration struct {
 	ScanTimeoutSeconds int
 	ConnectionType     string
 	ClamavSocketPath   string
+
+	// Toast message customization
+	ToastMessageScanning string
+	ToastMessageSuccess  string
+}
+
+const (
+	DefaultToastMessageScanning = "Scanning file..."
+	DefaultToastMessageSuccess  = "File scanned, no threats found"
+)
+
+// FromMap populates the configuration from a map[string]interface{}.
+func (c *configuration) FromMap(m map[string]interface{}) error {
+	jsonBytes, err := json.Marshal(m)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal plugin configuration")
+	}
+	if err := json.Unmarshal(jsonBytes, c); err != nil {
+		return errors.Wrap(err, "failed to unmarshal plugin configuration")
+	}
+	return nil
+}
+
+// ToMap converts the configuration to a map[string]interface{}.
+func (c *configuration) ToMap() (map[string]interface{}, error) {
+	jsonBytes, err := json.Marshal(c)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal configuration")
+	}
+	var m map[string]interface{}
+	if err := json.Unmarshal(jsonBytes, &m); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal configuration")
+	}
+	return m, nil
+}
+
+// Defaults trims string fields and sets default values for empty toast messages.
+func (c *configuration) Defaults() {
+	c.ToastMessageScanning = strings.TrimSpace(c.ToastMessageScanning)
+	c.ToastMessageSuccess = strings.TrimSpace(c.ToastMessageSuccess)
+
+	if c.ToastMessageScanning == "" {
+		c.ToastMessageScanning = DefaultToastMessageScanning
+	}
+	if c.ToastMessageSuccess == "" {
+		c.ToastMessageSuccess = DefaultToastMessageSuccess
+	}
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
@@ -84,4 +134,31 @@ func (p *Plugin) OnConfigurationChange() error {
 	p.setConfiguration(configuration)
 
 	return nil
+}
+
+// ConfigurationWillBeSaved is invoked before saving the configuration to the backing store.
+func (p *Plugin) ConfigurationWillBeSaved(newCfg *model.Config) (*model.Config, error) {
+	if newCfg == nil || newCfg.PluginSettings.Plugins == nil {
+		return newCfg, nil
+	}
+
+	pluginConfig, ok := newCfg.PluginSettings.Plugins["antivirus"]
+	if !ok {
+		return newCfg, nil
+	}
+
+	var cfg configuration
+	if err := cfg.FromMap(pluginConfig); err != nil {
+		return nil, err
+	}
+
+	cfg.Defaults()
+
+	// Update values in-place for both key casings
+	pluginConfig["ToastMessageScanning"] = cfg.ToastMessageScanning
+	pluginConfig["toastmessagescanning"] = cfg.ToastMessageScanning
+	pluginConfig["ToastMessageSuccess"] = cfg.ToastMessageSuccess
+	pluginConfig["toastmessagesuccess"] = cfg.ToastMessageSuccess
+
+	return newCfg, nil
 }

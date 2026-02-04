@@ -40,7 +40,7 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		p.API.LogWarn("Session ID not found for user", "session_id", c.SessionId)
 	}
 
-	if err := p.API.SendToastMessage(info.CreatorId, connectionID, "Scanning file...", model.SendToastMessageOptions{
+	if err := p.API.SendToastMessage(info.CreatorId, connectionID, config.ToastMessageScanning, model.SendToastMessageOptions{
 		Position: "bottom-center",
 	}); err != nil {
 		p.API.LogError("Error while sending toast message. " + err.Error())
@@ -55,7 +55,7 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		select {
 		case scanResult, ok := <-response:
 			if !ok {
-				if err := p.API.SendToastMessage(info.CreatorId, connectionID, "File scanned, no threats found", model.SendToastMessageOptions{
+				if err := p.API.SendToastMessage(info.CreatorId, connectionID, config.ToastMessageSuccess, model.SendToastMessageOptions{
 					Position: "bottom-center",
 				}); err != nil {
 					p.API.LogError("Error while sending success toast message. " + err.Error())
