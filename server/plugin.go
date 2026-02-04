@@ -17,6 +17,10 @@ type Plugin struct {
 	configurationLock sync.RWMutex
 
 	configuration *configuration
+
+	// Session tracking
+	sessionToConn   map[string]string
+	sessionToConnMu sync.RWMutex
 }
 
 func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, _ io.Writer) (*model.FileInfo, string) {
@@ -30,7 +34,13 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 	}
 	abortScan := make(chan bool)
 
-	if err := p.API.SendToastMessage(info.CreatorId, c.SessionId, "Scanning file...", model.SendToastMessageOptions{
+	connectionID, found := p.GetConnectionIDForSession(c.SessionId)
+	if !found {
+		connectionID = ""
+		p.API.LogWarn("Session ID not found for user", "session_id", c.SessionId)
+	}
+
+	if err := p.API.SendToastMessage(info.CreatorId, connectionID, "Scanning file...", model.SendToastMessageOptions{
 		Position: "bottom-center",
 	}); err != nil {
 		p.API.LogError("Error while sending toast message. " + err.Error())
@@ -45,6 +55,11 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		select {
 		case scanResult, ok := <-response:
 			if !ok {
+				if err := p.API.SendToastMessage(info.CreatorId, connectionID, "File scanned, no threats found", model.SendToastMessageOptions{
+					Position: "bottom-center",
+				}); err != nil {
+					p.API.LogError("Error while sending success toast message. " + err.Error())
+				}
 				return info, ""
 			}
 			if scanResult.Status != clamd.RES_OK {
@@ -58,4 +73,9 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 			return nil, "Problem with antivirus scanner."
 		}
 	}
+}
+
+func (p *Plugin) OnActivate() error {
+	p.initializeSessionTracking()
+	return nil
 }
