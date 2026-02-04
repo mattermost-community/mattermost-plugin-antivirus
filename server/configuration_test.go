@@ -63,12 +63,12 @@ func TestConfiguration_ToMap(t *testing.T) {
 		m, err := cfg.ToMap()
 
 		require.NoError(t, err)
-		assert.Equal(t, "localhost:3310", m["ClamavHostPort"])
-		assert.Equal(t, float64(30), m["ScanTimeoutSeconds"])
-		assert.Equal(t, "tcp", m["ConnectionType"])
-		assert.Equal(t, "/tmp/clamd.socket", m["ClamavSocketPath"])
-		assert.Equal(t, "Scanning...", m["ToastMessageScanning"])
-		assert.Equal(t, "Done!", m["ToastMessageSuccess"])
+		assert.Equal(t, "localhost:3310", m["clamavhostport"])
+		assert.Equal(t, float64(30), m["scantimeoutseconds"])
+		assert.Equal(t, "tcp", m["connectiontype"])
+		assert.Equal(t, "/tmp/clamd.socket", m["clamavsocketpath"])
+		assert.Equal(t, "Scanning...", m["toastmessagescanning"])
+		assert.Equal(t, "Done!", m["toastmessagesuccess"])
 	})
 
 	t.Run("handles empty configuration", func(t *testing.T) {

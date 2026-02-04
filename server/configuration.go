@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"reflect"
 	"strings"
 
-	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/pkg/errors"
 )
 
@@ -21,14 +19,14 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
-	ClamavHostPort     string
-	ScanTimeoutSeconds int
-	ConnectionType     string
-	ClamavSocketPath   string
+	ClamavHostPort     string `json:"clamavhostport"`
+	ScanTimeoutSeconds int    `json:"scantimeoutseconds"`
+	ConnectionType     string `json:"connectiontype"`
+	ClamavSocketPath   string `json:"clamavsocketpath"`
 
 	// Toast message customization
-	ToastMessageScanning string
-	ToastMessageSuccess  string
+	ToastMessageScanning string `json:"toastmessagescanning"`
+	ToastMessageSuccess  string `json:"toastmessagesuccess"`
 }
 
 const (
@@ -37,24 +35,24 @@ const (
 )
 
 // FromMap populates the configuration from a map[string]interface{}.
-func (c *configuration) FromMap(m map[string]interface{}) error {
+func (c *configuration) FromMap(m map[string]any) error {
 	jsonBytes, err := json.Marshal(m)
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal plugin configuration")
 	}
-	if err := json.Unmarshal(jsonBytes, c); err != nil {
+	if err := json.Unmarshal(jsonBytes, &c); err != nil {
 		return errors.Wrap(err, "failed to unmarshal plugin configuration")
 	}
 	return nil
 }
 
 // ToMap converts the configuration to a map[string]interface{}.
-func (c *configuration) ToMap() (map[string]interface{}, error) {
+func (c *configuration) ToMap() (map[string]any, error) {
 	jsonBytes, err := json.Marshal(c)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to marshal configuration")
 	}
-	var m map[string]interface{}
+	var m map[string]any
 	if err := json.Unmarshal(jsonBytes, &m); err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal configuration")
 	}
@@ -109,13 +107,6 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 	defer p.configurationLock.Unlock()
 
 	if configuration != nil && p.configuration == configuration {
-		// Ignore assignment if the configuration struct is empty. Go will optimize the
-		// allocation for same to point at the same memory address, breaking the check
-		// above.
-		if reflect.ValueOf(*configuration).NumField() == 0 {
-			return
-		}
-
 		panic("setConfiguration called with the existing configuration")
 	}
 
@@ -131,34 +122,40 @@ func (p *Plugin) OnConfigurationChange() error {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
 
+	configuration.Defaults()
 	p.setConfiguration(configuration)
 
 	return nil
 }
 
-// ConfigurationWillBeSaved is invoked before saving the configuration to the backing store.
-func (p *Plugin) ConfigurationWillBeSaved(newCfg *model.Config) (*model.Config, error) {
-	if newCfg == nil || newCfg.PluginSettings.Plugins == nil {
-		return newCfg, nil
-	}
+// // ConfigurationWillBeSaved is invoked before saving the configuration to the backing store.
+// func (p *Plugin) ConfigurationWillBeSaved(newCfg *model.Config) (*model.Config, error) {
+// 	if newCfg == nil || newCfg.PluginSettings.Plugins == nil {
+// 		return newCfg, nil
+// 	}
 
-	pluginConfig, ok := newCfg.PluginSettings.Plugins["antivirus"]
-	if !ok {
-		return newCfg, nil
-	}
+// 	pluginConfig, ok := newCfg.PluginSettings.Plugins["antivirus"]
+// 	if !ok {
+// 		return newCfg, nil
+// 	}
 
-	var cfg configuration
-	if err := cfg.FromMap(pluginConfig); err != nil {
-		return nil, err
-	}
+// 	// Log the plugin configuration for debugging
+// 	p.API.LogDebug("Plugin configuration", "config", pluginConfig)
 
-	cfg.Defaults()
+// 	var cfg configuration
+// 	if err := cfg.FromMap(pluginConfig); err != nil {
+// 		return nil, err
+// 	}
 
-	// Update values in-place for both key casings
-	pluginConfig["ToastMessageScanning"] = cfg.ToastMessageScanning
-	pluginConfig["toastmessagescanning"] = cfg.ToastMessageScanning
-	pluginConfig["ToastMessageSuccess"] = cfg.ToastMessageSuccess
-	pluginConfig["toastmessagesuccess"] = cfg.ToastMessageSuccess
+// 	cfg.Defaults()
 
-	return newCfg, nil
-}
+// 	updatedPluginConfig, err := cfg.ToMap()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	p.API.LogDebug("Updated plugin configuration", "config", updatedPluginConfig)
+
+// 	newCfg.PluginSettings.Plugins["antivirus"] = updatedPluginConfig
+
+// 	return newCfg, nil
+// }
