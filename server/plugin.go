@@ -36,7 +36,6 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 
 	connectionID, found := p.GetConnectionIDForSession(c.SessionId)
 	if !found {
-		connectionID = ""
 		p.API.LogWarn("Session ID not found for user", "session_id", c.SessionId)
 	}
 
