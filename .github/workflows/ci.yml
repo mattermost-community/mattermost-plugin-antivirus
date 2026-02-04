@@ -11,4 +11,4 @@ jobs:
     uses: mattermost/actions-workflows/.github/workflows/community-plugin-ci.yml@main
     secrets: inherit
     with:
-      golang-version: 1.24.11
+      golang-version: ""

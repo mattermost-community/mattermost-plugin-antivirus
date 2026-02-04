@@ -4,7 +4,8 @@ go 1.24.11
 
 require (
 	github.com/IntelXLabs-LLC/go-clamd v1.0.1
-	github.com/mattermost/mattermost/server/public v0.1.22-0.20260114140258-08cc0e38353e
+	github.com/mattermost/mattermost-plugin-api v0.1.0
+	github.com/mattermost/mattermost/server/public v0.1.22-0.20260128161350-8623f5299c09
 	github.com/pkg/errors v0.9.1
 )
 
