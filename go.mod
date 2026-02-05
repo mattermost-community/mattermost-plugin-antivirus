@@ -4,9 +4,9 @@ go 1.24.11
 
 require (
 	github.com/IntelXLabs-LLC/go-clamd v1.0.1
-	github.com/mattermost/mattermost-plugin-api v0.1.0
 	github.com/mattermost/mattermost/server/public v0.1.22-0.20260128161350-8623f5299c09
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.11.1
 )
 
 require (
@@ -43,7 +43,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/russellhaering/goxmldsig v1.5.0 // indirect
-	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/tinylib/msgp v1.5.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
