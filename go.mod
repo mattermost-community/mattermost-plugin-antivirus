@@ -1,10 +1,10 @@
 module github.com/mattermost/mattermost-plugin-antivirus
 
-go 1.24.11
+go 1.24.13
 
 require (
 	github.com/IntelXLabs-LLC/go-clamd v1.0.1
-	github.com/mattermost/mattermost/server/public v0.1.22-0.20260128161350-8623f5299c09
+	github.com/mattermost/mattermost/server/public v0.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 )
