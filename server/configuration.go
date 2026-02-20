@@ -127,35 +127,3 @@ func (p *Plugin) OnConfigurationChange() error {
 
 	return nil
 }
-
-// // ConfigurationWillBeSaved is invoked before saving the configuration to the backing store.
-// func (p *Plugin) ConfigurationWillBeSaved(newCfg *model.Config) (*model.Config, error) {
-// 	if newCfg == nil || newCfg.PluginSettings.Plugins == nil {
-// 		return newCfg, nil
-// 	}
-
-// 	pluginConfig, ok := newCfg.PluginSettings.Plugins["antivirus"]
-// 	if !ok {
-// 		return newCfg, nil
-// 	}
-
-// 	// Log the plugin configuration for debugging
-// 	p.API.LogDebug("Plugin configuration", "config", pluginConfig)
-
-// 	var cfg configuration
-// 	if err := cfg.FromMap(pluginConfig); err != nil {
-// 		return nil, err
-// 	}
-
-// 	cfg.Defaults()
-
-// 	updatedPluginConfig, err := cfg.ToMap()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	p.API.LogDebug("Updated plugin configuration", "config", updatedPluginConfig)
-
-// 	newCfg.PluginSettings.Plugins["antivirus"] = updatedPluginConfig
-
-// 	return newCfg, nil
-// }
