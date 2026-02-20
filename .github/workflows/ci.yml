@@ -10,5 +10,3 @@ jobs:
   plugin-ci:
     uses: mattermost/actions-workflows/.github/workflows/community-plugin-ci.yml@main
     secrets: inherit
-    with:
-      golang-version: ""
