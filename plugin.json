@@ -14,8 +14,7 @@
             "darwin-amd64": "server/dist/plugin-darwin-amd64",
             "darwin-arm64": "server/dist/plugin-darwin-arm64",
             "windows-amd64": "server/dist/plugin-windows-amd64.exe"
-        },
-        "executable": ""
+        }
     },
     "settings_schema": {
         "header": "Antivirus plugin which uses ClamAV to scan files uploaded to Mattermost. See [documentation here](https://github.com/mattermost/mattermost-plugin-antivirus).",
@@ -62,6 +61,22 @@
                 "help_text": "How long the virus scan can take before giving up.",
                 "placeholder": "10",
                 "default": 10
+            },
+            {
+                "key": "ToastMessageScanning",
+                "display_name": "Scanning Toast Message:",
+                "type": "text",
+                "help_text": "Message shown to the user while a file is being scanned.",
+                "placeholder": "",
+                "default": "Scanning file..."
+            },
+            {
+                "key": "ToastMessageSuccess",
+                "display_name": "Success Toast Message:",
+                "type": "text",
+                "help_text": "Message shown to the user when a file scan completes with no threats found.",
+                "placeholder": "",
+                "default": "File scanned, no threats found"
             }
         ]
     }

@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
 
-	"github.com/dutchcoders/go-clamd"
+	"github.com/IntelXLabs-LLC/go-clamd"
 )
 
 type Plugin struct {
@@ -19,7 +19,7 @@ type Plugin struct {
 	configuration *configuration
 }
 
-func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, output io.Writer) (*model.FileInfo, string) {
+func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, file io.Reader, _ io.Writer) (*model.FileInfo, string) {
 	config := p.getConfiguration()
 
 	var av *clamd.Clamd
@@ -29,6 +29,13 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		av = clamd.NewClamd(config.ClamavSocketPath)
 	}
 	abortScan := make(chan bool)
+
+	if err := p.API.SendToastMessage(info.CreatorId, c.ConnectionId, config.ToastMessageScanning, model.SendToastMessageOptions{
+		Position: "bottom-center",
+	}); err != nil {
+		p.API.LogError("Error while sending toast message. " + err.Error())
+	}
+
 	response, err := av.ScanStream(file, abortScan)
 	if err != nil {
 		p.API.LogError("Error while scanning for viruses. " + err.Error())
@@ -38,6 +45,11 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 		select {
 		case scanResult, ok := <-response:
 			if !ok {
+				if err := p.API.SendToastMessage(info.CreatorId, c.ConnectionId, config.ToastMessageSuccess, model.SendToastMessageOptions{
+					Position: "bottom-center",
+				}); err != nil {
+					p.API.LogError("Error while sending success toast message. " + err.Error())
+				}
 				return info, ""
 			}
 			if scanResult.Status != clamd.RES_OK {

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"strings"
+
 	"github.com/pkg/errors"
 )
 
@@ -16,16 +19,63 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
-	ClamavHostPort     string
-	ScanTimeoutSeconds int
-	ConnectionType     string
-	ClamavSocketPath   string
+	ClamavHostPort     string `json:"clamavhostport"`
+	ScanTimeoutSeconds int    `json:"scantimeoutseconds"`
+	ConnectionType     string `json:"connectiontype"`
+	ClamavSocketPath   string `json:"clamavsocketpath"`
+
+	// Toast message customization
+	ToastMessageScanning string `json:"toastmessagescanning"`
+	ToastMessageSuccess  string `json:"toastmessagesuccess"`
+}
+
+const (
+	DefaultToastMessageScanning = "Scanning file..."
+	DefaultToastMessageSuccess  = "File scanned, no threats found"
+)
+
+// FromMap populates the configuration from a map[string]interface{}.
+func (c *configuration) FromMap(m map[string]any) error {
+	jsonBytes, err := json.Marshal(m)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal plugin configuration")
+	}
+	if err := json.Unmarshal(jsonBytes, &c); err != nil {
+		return errors.Wrap(err, "failed to unmarshal plugin configuration")
+	}
+	return nil
+}
+
+// ToMap converts the configuration to a map[string]interface{}.
+func (c *configuration) ToMap() (map[string]any, error) {
+	jsonBytes, err := json.Marshal(c)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal configuration")
+	}
+	var m map[string]any
+	if err := json.Unmarshal(jsonBytes, &m); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal configuration")
+	}
+	return m, nil
+}
+
+// Defaults trims string fields and sets default values for empty toast messages.
+func (c *configuration) Defaults() {
+	c.ToastMessageScanning = strings.TrimSpace(c.ToastMessageScanning)
+	c.ToastMessageSuccess = strings.TrimSpace(c.ToastMessageSuccess)
+
+	if c.ToastMessageScanning == "" {
+		c.ToastMessageScanning = DefaultToastMessageScanning
+	}
+	if c.ToastMessageSuccess == "" {
+		c.ToastMessageSuccess = DefaultToastMessageSuccess
+	}
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
 // your configuration has reference types.
 func (c *configuration) Clone() *configuration {
-	var clone = *c
+	clone := *c
 	return &clone
 }
 
@@ -65,13 +115,14 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
 func (p *Plugin) OnConfigurationChange() error {
-	var configuration = new(configuration)
+	configuration := new(configuration)
 
 	// Load the public configuration fields from the Mattermost server configuration.
 	if err := p.API.LoadPluginConfiguration(configuration); err != nil {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}
 
+	configuration.Defaults()
 	p.setConfiguration(configuration)
 
 	return nil
